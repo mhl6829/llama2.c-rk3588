@@ -2,11 +2,18 @@
 # example override to clang: make run CC=clang
 CC = gcc
 
+NDK = $(NDK_PATH)
+
 # the most basic way of building that is most likely to work on most systems
 .PHONY: run
 run: run.c
 	$(CC) -O3 -o run run.c -lm
 	$(CC) -O3 -o runq runq.c -lm
+
+# RK3588 Cross-compile
+rk: run.c
+	$(NDK)/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang --target=aarch64-linux-android33 --sysroot=$(NDK)/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -O3 -o run_aarch64 run.c -lm
+
 
 # useful for a debug build, can then e.g. analyze with valgrind, example:
 # $ valgrind --leak-check=full ./run out/model.bin -n 3
